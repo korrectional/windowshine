@@ -1,6 +1,6 @@
 ---
 name: WindowShine
-description: Charlotte's premier residential pure-water window cleaning service.
+description: Charlotte's exterior residential window cleaning service.
 colors:
   primary: "#0284c7"
   primary-hover: "#0369a1"
@@ -53,50 +53,48 @@ components:
 
 ## Overview
 
-WindowShine's visual design system communicates absolute optical clarity, precision, and dependable local residential trust in Charlotte, NC. The visual language rejects cluttered handyman tropes and purple/blue generic gradients in favor of crisp architectural geometry, daylight skycerulean, deep night sky navy, and natural Carolina sunlight accents.
+WindowShine's visual design system communicates clarity, precision, and reliable exterior residential service in Charlotte, NC. The visual language uses crisp architectural geometry, daylight skycerulean, deep navy, and natural Carolina sunlight accents.
 
 ## Colors
 
-- **Primary Brand Cerulean (`#0284c7`, hover `#0369a1`):** Represents purified deionized water and sky reflection on pristine glass.
-- **Architectural Navy Ground (`#0b132b`, `#141d38`):** Deep, stable frame color providing contrast and premium residential character.
-- **Sunburst Accent (`#f59e0b`):** Used sparingly for optical sparkles, active ratings, and key guarantees.
-- **Surface Clean (`#ffffff`, `#f8fafc`):** High key, open, uncluttered white space mirroring clean glass.
+- **Primary Brand Cerulean (`#0284c7`, hover `#0369a1`):** Represents sky reflection and clean exterior glass.
+- **Architectural Navy Ground (`#0b132b`, `#141d38`):** Deep, stable frame color providing contrast.
+- **Sunburst Accent (`#f59e0b`):** Used sparingly for optical sparkles and key callouts.
+- **Surface Clean (`#ffffff`, `#f8fafc`):** High key, open white space mirroring clean glass.
 
 ## Typography
 
-- **Headings & Display:** Plus Jakarta Sans with tightened tracking (-0.02em) for architectural authority and confidence.
-- **Body & Controls:** Figtree with comfortable measure (65-75ch) and generous 1.6 line height for effortless readability.
+- **Headings & Display:** Plus Jakarta Sans with tightened tracking (-0.02em).
+- **Body & Controls:** Figtree with comfortable measure and 1.6 line height.
 
 ## Layout
 
-- Tight functional groupings with generous breathing room between thematic sections.
-- Responsive container with max-w-7xl constraint and 12-column asymmetric hero balancing the customer's real photography with direct value propositions.
+- Tight functional groupings with generous breathing room.
+- Responsive container with max-w-7xl constraint and 12-column asymmetric hero balancing real photography with clear action.
 
 ## Elevation & Depth
 
-- Restrained, clean drop shadows (`0 4px 20px -2px rgba(11, 19, 43, 0.08)`) simulating soft daylight rather than muddy grey drop-shadows.
-- Zero harsh offset neobrutalist shadows. Zero decorative fuzzy glow halos.
+- Restrained, clean drop shadows (`0 4px 20px -2px rgba(11, 19, 43, 0.08)`).
+- Zero harsh offset neobrutalist shadows.
 
 ## Shapes
 
-- Rounded radii calibrated at 12px for cards and containers, 8px for inner interactive controls, and pill badges (9999px) strictly for concise trust indicators.
+- Rounded radii calibrated at 12px for cards and containers, 8px for inner interactive controls.
 
 ## Components
 
-- **Interactive Squeegee Reveal:** Dual-layered split viewport allowing the homeowner to drag a physical squeegee blade across misty, pollen-filmed glass to reveal crystal-clear blue Carolina skies.
-- **Estimate Planner & Booking Matrix:** Instant live calculation based on Charlotte home type and window count slider, with direct booking request submission.
-- **Trust Badges:** Prominent indicators for $2M Insurance, 48-Hour Rain Warranty, and Streak-Free Guarantee.
+- **Interactive Squeegee Reveal:** Dual-layered split viewport allowing the homeowner to drag a physical squeegee blade across pollen-filmed glass to reveal crystal-clear skies.
+- **Free Estimate Request Form:** Straightforward appointment request form with property type, home size, and contact details.
 
 ## Do's and Don'ts
 
 ### Do's
-- Emphasize real residential photography and clean optical whites.
-- Provide immediate, transparent pricing guidance and direct phone contact.
+- Emphasize real residential exterior photography and clean whites.
+- Focus strictly on exterior residential service (no need to be home).
 - Highlight specific Charlotte neighborhoods (Myers Park, Ballantyne, Dilworth, etc.).
-- Maintain contrast ratios well above WCAG AA (≥4.5:1 body, ≥3:1 headings).
 
 ### Don'ts
-- Do not use generic gradient text or rainbow CTA buttons.
-- Do not use lazy nested card grids or generic icon boxes.
-- Do not use fake stock testimonials with generic avatar circles.
-- Do not omit the 48-hour rain warranty or insurance credentials.
+- Do not mention deionized water or water science comparisons.
+- Do not mention interior cleaning, booties, or indoor protection.
+- Do not claim insurance policies or explicit guarantees.
+- Do not use price sliders or speculative price calculators.
