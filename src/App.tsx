@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Sparkles,
   Phone,
@@ -20,25 +20,6 @@ import {
 export default function App() {
   // Mobile navigation drawer
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Squeegee Before/After slider position (percentage 0 to 100)
-  const [sliderPos, setSliderPos] = useState(50);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Handle drag on squeegee interactive container
-  const handleMove = (clientX: number) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const clamped = Math.max(5, Math.min(95, (x / rect.width) * 100));
-    setSliderPos(clamped);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (e.touches.length > 0) {
-      handleMove(e.touches[0].clientX);
-    }
-  };
 
   // Appointment & Estimate Form State (Calendar, Full Name, Address, Zip Code)
   const [preferredDate, setPreferredDate] = useState('');
@@ -136,9 +117,6 @@ export default function App() {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold text-navy-800">
-            <a href="#interactive-proof" className="hover:text-skycraft-600 transition-colors">
-              The Proof
-            </a>
             <a href="#how-it-works" className="hover:text-skycraft-600 transition-colors">
               How It Works
             </a>
@@ -180,13 +158,6 @@ export default function App() {
         {/* Mobile menu dropdown */}
         {mobileMenuOpen && (
           <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-3">
-            <a
-              href="#interactive-proof"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block py-2 text-base font-semibold text-navy-900 border-b border-slate-100"
-            >
-              The Proof (Interactive)
-            </a>
             <a
               href="#how-it-works"
               onClick={() => setMobileMenuOpen(false)}
@@ -340,106 +311,16 @@ export default function App() {
         </div>
       </section>
 
-      {/* Interactive Signature Element: The Squeegee Reveal */}
-      <section id="interactive-proof" className="py-16 sm:py-24 bg-white border-y border-slate-200">
+      {/* Decorative Window Glass Feature */}
+      <section className="py-12 sm:py-16 bg-white border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="max-w-3xl mx-auto text-center space-y-4 mb-12">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 font-display">
-              Drag the squeegee to reveal the difference.
-            </h2>
-            <p className="text-base sm:text-lg text-slate-600">
-              Charlotte spring pine pollen, highway haze, and rain film leave a dull layer over your glass. See the clean clarity professional exterior window washing brings to your home.
-            </p>
+          <div className="rounded-2xl overflow-hidden shadow-2xl border-4 border-white ring-1 ring-slate-200 bg-slate-900">
+            <img
+              src="/images/squeegee-glass.jpg"
+              alt="Clean exterior window with streak-free glass and squeegee"
+              className="w-full h-[360px] sm:h-[500px] lg:h-[620px] object-cover object-center"
+            />
           </div>
-
-          {/* Interactive Squeegee Container */}
-          <div className="max-w-4xl mx-auto">
-            <div
-              ref={containerRef}
-              onMouseMove={(e) => {
-                if (e.buttons === 1) handleMove(e.clientX);
-              }}
-              onTouchMove={handleTouchMove}
-              className="relative h-[340px] sm:h-[480px] rounded-2xl overflow-hidden select-none shadow-2xl border-4 border-navy-900 cursor-ew-resize group"
-            >
-              {/* Clean Revealed Image (Right Side / Full Base) */}
-              <img
-                src="/images/squeegee-glass.jpg"
-                alt="Clean exterior window revealing bright blue sky and neighborhood"
-                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-              />
-
-              {/* Dirty / Grimy Layer (Left Side, clipped by sliderPos) */}
-              <div
-                className="absolute inset-0 overflow-hidden pointer-events-none"
-                style={{ width: `${sliderPos}%` }}
-              >
-                <div className="relative w-full h-full">
-                  {/* Base blurred & pollen-tinted glass */}
-                  <img
-                    src="/images/squeegee-glass.jpg"
-                    alt="Pollen and grime film on window"
-                    className="w-full h-full object-cover filter blur-[3px] brightness-90 sepia-[0.35]"
-                    style={{
-                      width: containerRef.current ? `${containerRef.current.clientWidth}px` : '100%',
-                      maxWidth: 'none',
-                    }}
-                  />
-                  {/* Grime & water spot texture overlay */}
-                  <div className="absolute inset-0 bg-amber-950/20 backdrop-blur-[1px] flex items-center justify-center">
-                    <div className="bg-navy-950/80 text-white text-xs sm:text-sm font-bold px-3 py-1.5 rounded-lg shadow-md">
-                      Pollen & Dirt Film (Before)
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Clean Side Label */}
-              <div className="absolute top-4 right-4 bg-skycraft-600 text-white text-xs sm:text-sm font-bold px-3 py-1.5 rounded-lg shadow-md pointer-events-none">
-                WindowShine Clean (After)
-              </div>
-
-              {/* Squeegee Divider Line */}
-              <div
-                className="absolute top-0 bottom-0 w-1 bg-white shadow-[0_0_15px_rgba(255,255,255,0.9)] z-20 pointer-events-none"
-                style={{ left: `${sliderPos}%` }}
-              >
-                {/* Squeegee Handle Indicator */}
-                <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-navy-900 border-2 border-white shadow-xl flex items-center justify-center text-skycraft-300">
-                  <div className="flex items-center gap-0.5">
-                    <span className="text-[10px] font-bold">◀</span>
-                    <Sparkles className="w-4 h-4 text-amberlight-400" />
-                    <span className="text-[10px] font-bold">▶</span>
-                  </div>
-                </div>
-
-                {/* Squeegee Blade Visual */}
-                <div className="absolute top-2 -translate-x-1/2 w-8 h-1.5 bg-slate-400 rounded-sm"></div>
-                <div className="absolute bottom-2 -translate-x-1/2 w-8 h-1.5 bg-slate-400 rounded-sm"></div>
-              </div>
-            </div>
-
-            {/* Slider Control Bar below */}
-            <div className="mt-4 flex items-center justify-between text-xs sm:text-sm text-slate-500 px-2">
-              <span className="font-semibold text-amber-800">◀ Pollen & Grimy Glass</span>
-              <span className="font-bold text-navy-900">Drag or slide across the glass</span>
-              <span className="font-semibold text-skycraft-700">Clean & Bright Glass ▶</span>
-            </div>
-            
-            <div className="mt-2">
-              <input
-                type="range"
-                min="5"
-                max="95"
-                value={sliderPos}
-                onChange={(e) => setSliderPos(Number(e.target.value))}
-                aria-label="Squeegee before and after slider"
-                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer squeegee-slider-range"
-              />
-            </div>
-          </div>
-
         </div>
       </section>
 
