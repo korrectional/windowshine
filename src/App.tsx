@@ -210,47 +210,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-navy-950 flex flex-col font-sans">
-      {/* Top Banner */}
-      <div className="bg-navy-950 text-white text-xs sm:text-sm py-2 px-4 border-b border-navy-800">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="font-medium text-slate-200">
-              Charlotte, NC: Friendly, Honest Exterior Residential Window Cleaning
-            </span>
-          </div>
-          <div className="flex items-center gap-4 text-slate-300">
-            <span className="hidden sm:inline-block text-slate-400">100% Exterior • No Need to Be Home</span>
-            <span className="hidden sm:inline-block text-navy-700">|</span>
-            
-            {/* Top Phone with Bot Screening */}
-            {!phoneRevealed ? (
-              <button
-                type="button"
-                onClick={(e) => handlePhoneClick(e)}
-                className="inline-flex items-center gap-1.5 font-semibold text-white hover:text-skycraft-300 transition-colors cursor-pointer group whitespace-nowrap shrink-0"
-                title="Click to reveal phone number (anti-spam screening)"
-              >
-                <Phone className="w-3.5 h-3.5 text-amberlight-400 shrink-0" />
-                <span className="whitespace-nowrap font-mono">{getMaskedPhone()}</span>
-                <span className="text-[10px] bg-navy-800 text-skycraft-300 px-1.5 py-0.5 rounded border border-navy-700 group-hover:bg-navy-750 transition-colors whitespace-nowrap">
-                  Show
-                </span>
-              </button>
-            ) : (
-              <a
-                href={getTelHref()}
-                className="inline-flex items-center gap-1.5 font-semibold text-white hover:text-skycraft-300 transition-colors whitespace-nowrap shrink-0"
-              >
-                <Phone className="w-3.5 h-3.5 text-amberlight-400 shrink-0" />
-                <span className="whitespace-nowrap">{getFullPhone()}</span>
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" title="Human verified" />
-              </a>
-            )}
-          </div>
-        </div>
-      </div>
-
       {/* Main Header */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
