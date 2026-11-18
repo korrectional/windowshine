@@ -29,7 +29,7 @@ const PHONE_PARTS = {
   suffix: '2045',
 };
 
-const getMaskedPhone = () => `(${PHONE_PARTS.area}) •••-••••`;
+const getMaskedPhone = () => `(${PHONE_PARTS.area}) •••\u2011••••`;
 const getFullPhone = () => `(${PHONE_PARTS.area}) ${PHONE_PARTS.prefix}-${PHONE_PARTS.suffix}`;
 const getTelHref = () => `tel:${PHONE_PARTS.area}${PHONE_PARTS.prefix}${PHONE_PARTS.suffix}`;
 
@@ -228,23 +228,23 @@ export default function App() {
               <button
                 type="button"
                 onClick={(e) => handlePhoneClick(e)}
-                className="inline-flex items-center gap-1.5 font-semibold text-white hover:text-skycraft-300 transition-colors cursor-pointer group"
+                className="inline-flex items-center gap-1.5 font-semibold text-white hover:text-skycraft-300 transition-colors cursor-pointer group whitespace-nowrap shrink-0"
                 title="Click to reveal phone number (anti-spam screening)"
               >
-                <Phone className="w-3.5 h-3.5 text-amberlight-400" />
-                <span>{getMaskedPhone()}</span>
-                <span className="text-[10px] bg-navy-800 text-skycraft-300 px-1.5 py-0.5 rounded border border-navy-700 group-hover:bg-navy-750 transition-colors">
+                <Phone className="w-3.5 h-3.5 text-amberlight-400 shrink-0" />
+                <span className="whitespace-nowrap font-mono">{getMaskedPhone()}</span>
+                <span className="text-[10px] bg-navy-800 text-skycraft-300 px-1.5 py-0.5 rounded border border-navy-700 group-hover:bg-navy-750 transition-colors whitespace-nowrap">
                   Show
                 </span>
               </button>
             ) : (
               <a
                 href={getTelHref()}
-                className="inline-flex items-center gap-1.5 font-semibold text-white hover:text-skycraft-300 transition-colors"
+                className="inline-flex items-center gap-1.5 font-semibold text-white hover:text-skycraft-300 transition-colors whitespace-nowrap shrink-0"
               >
-                <Phone className="w-3.5 h-3.5 text-amberlight-400" />
-                <span>{getFullPhone()}</span>
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" title="Human verified" />
+                <Phone className="w-3.5 h-3.5 text-amberlight-400 shrink-0" />
+                <span className="whitespace-nowrap">{getFullPhone()}</span>
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" title="Human verified" />
               </a>
             )}
           </div>
@@ -253,9 +253,9 @@ export default function App() {
 
       {/* Main Header */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-3 group">
+          <a href="#" className="flex items-center gap-3 group shrink-0">
             <div className="w-11 h-11 rounded-xl bg-navy-900 flex items-center justify-center text-skycraft-400 shadow-clean transition-transform group-hover:scale-105">
               <Sparkles className="w-6 h-6 text-skycraft-300" />
             </div>
@@ -270,51 +270,52 @@ export default function App() {
           </a>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold text-navy-800">
-            <a href="#standards" className="hover:text-skycraft-600 transition-colors">
+          <nav className="hidden lg:flex items-center gap-5 xl:gap-8 text-sm font-semibold text-navy-800">
+            <a href="#standards" className="hover:text-skycraft-600 transition-colors whitespace-nowrap">
               The Standards
             </a>
-            <a href="#why-exterior" className="hover:text-skycraft-600 transition-colors">
-              Why Exterior-Only
+            <a href="#why-exterior" className="hover:text-skycraft-600 transition-colors whitespace-nowrap">
+              Why Exterior
             </a>
-            <a href="#reviews" className="hover:text-skycraft-600 transition-colors">
-              Neighbor Reviews
+            <a href="#reviews" className="hover:text-skycraft-600 transition-colors whitespace-nowrap">
+              Reviews
             </a>
-            <a href="#coverage" className="hover:text-skycraft-600 transition-colors">
+            <a href="#coverage" className="hover:text-skycraft-600 transition-colors whitespace-nowrap">
               Service Areas
             </a>
-            <a href="#faq" className="hover:text-skycraft-600 transition-colors">
+            <a href="#faq" className="hover:text-skycraft-600 transition-colors whitespace-nowrap">
               FAQ
             </a>
           </nav>
 
           {/* Action CTAs */}
-          <div className="hidden sm:flex items-center gap-4">
+          <div className="hidden sm:flex items-center gap-3 shrink-0">
             {!phoneRevealed ? (
               <button
                 type="button"
                 onClick={(e) => handlePhoneClick(e)}
-                className="text-sm font-bold text-navy-900 hover:text-skycraft-600 px-3 py-2 transition-colors flex items-center gap-2 cursor-pointer group"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold text-navy-900 hover:text-skycraft-600 transition-colors cursor-pointer group whitespace-nowrap shrink-0 hover:bg-slate-100"
                 title="Click to reveal phone number"
               >
-                <Phone className="w-4 h-4 text-skycraft-600" />
-                <span>{getMaskedPhone()}</span>
-                <span className="text-[11px] font-semibold bg-skycraft-100 text-skycraft-800 px-2 py-0.5 rounded-full group-hover:bg-skycraft-200 transition-colors">
+                <Phone className="w-4 h-4 text-skycraft-600 shrink-0" />
+                <span className="whitespace-nowrap font-mono">{getMaskedPhone()}</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider bg-skycraft-100 text-skycraft-800 px-2 py-0.5 rounded-full whitespace-nowrap group-hover:bg-skycraft-200 transition-colors">
                   Show
                 </span>
               </button>
             ) : (
               <a
                 href={getTelHref()}
-                className="text-sm font-bold text-navy-900 hover:text-skycraft-600 px-3 py-2 transition-colors flex items-center gap-1.5"
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold text-navy-900 hover:text-skycraft-600 transition-colors whitespace-nowrap shrink-0 hover:bg-slate-100"
               >
-                <Phone className="w-4 h-4 text-skycraft-600" />
-                <span>{getFullPhone()}</span>
+                <Phone className="w-4 h-4 text-skycraft-600 shrink-0" />
+                <span className="whitespace-nowrap">{getFullPhone()}</span>
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" title="Human verified" />
               </a>
             )}
             <a
               href="#quote-form"
-              className="bg-skycraft-600 hover:bg-skycraft-700 text-white font-bold text-sm px-5 py-2.5 rounded-lg shadow-clean transition-all hover:shadow-water hover:-translate-y-0.5 active:translate-y-0"
+              className="bg-skycraft-600 hover:bg-skycraft-700 text-white font-bold text-sm px-5 py-2.5 rounded-lg shadow-clean transition-all hover:shadow-water hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap shrink-0"
             >
               Get Free Estimate
             </a>
@@ -445,22 +446,22 @@ export default function App() {
                   <button
                     type="button"
                     onClick={(e) => handlePhoneClick(e, true)}
-                    className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-navy-950 border border-slate-300 font-bold text-base px-6 py-4 rounded-xl shadow-sm transition-all hover:border-slate-400 text-center cursor-pointer group"
+                    className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-navy-950 border border-slate-300 font-bold text-base px-6 py-4 rounded-xl shadow-sm transition-all hover:border-slate-400 text-center cursor-pointer group whitespace-nowrap shrink-0"
                     title="Click to reveal phone number (anti-bot protection)"
                   >
-                    <Phone className="w-5 h-5 text-skycraft-600" />
-                    <span>{getMaskedPhone()}</span>
-                    <span className="text-xs font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md group-hover:bg-skycraft-100 group-hover:text-skycraft-800 transition-colors">
+                    <Phone className="w-5 h-5 text-skycraft-600 shrink-0" />
+                    <span className="whitespace-nowrap font-mono">{getMaskedPhone()}</span>
+                    <span className="text-xs font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md group-hover:bg-skycraft-100 group-hover:text-skycraft-800 transition-colors whitespace-nowrap">
                       Click to Show
                     </span>
                   </button>
                 ) : (
                   <a
                     href={getTelHref()}
-                    className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-navy-950 border border-slate-300 font-bold text-base px-6 py-4 rounded-xl shadow-sm transition-all hover:border-slate-400 text-center"
+                    className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-navy-950 border border-slate-300 font-bold text-base px-6 py-4 rounded-xl shadow-sm transition-all hover:border-slate-400 text-center whitespace-nowrap shrink-0"
                   >
-                    <Phone className="w-5 h-5 text-skycraft-600" />
-                    <span>{getFullPhone()}</span>
+                    <Phone className="w-5 h-5 text-skycraft-600 shrink-0" />
+                    <span className="whitespace-nowrap">{getFullPhone()}</span>
                   </a>
                 )}
               </div>
