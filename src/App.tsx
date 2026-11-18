@@ -9,13 +9,16 @@ import {
   ChevronDown,
   ArrowRight,
   Home,
-  Check,
   Sun,
   Layers,
   HelpCircle,
   Menu,
   X,
-  Loader2
+  Loader2,
+  Star,
+  Quote,
+  ShieldCheck,
+  Heart
 } from 'lucide-react';
 import { GOOGLE_SHEET_WEBHOOK_URL } from './config';
 
@@ -77,20 +80,20 @@ export default function App() {
 
   const faqs = [
     {
-      q: 'Do I need to be home for my window cleaning appointment?',
-      a: 'No! Because our work is 100% exterior, you do not need to be home at all. As long as backyard gates are unlocked and pets are kept inside, our technicians will wash all exterior glass, wipe sills, and leave your property neat and locked up.',
+      q: 'Do I need to be home during my appointment?',
+      a: 'Not at all! Because our work is 100% exterior, you can go to work, run errands, or relax. As long as backyard gates are unlocked and pets are inside, our crew washes every exterior pane, clears outside screens, wipes sills, and latches the gate when finished.',
     },
     {
-      q: 'Can you reach high windows on the second or third story?',
-      a: 'Yes. We have specialized ladder systems and professional extension equipment to safely reach multi-story residential windows, high foyer transoms, dormers, and peaks.',
+      q: 'How do you reach tall second or third story windows?',
+      a: 'We bring specialized ladder standoff systems and professional exterior extension equipment to reach multi-story heights safely and cleanly—including hard-to-reach foyer transoms, dormers, and gables.',
     },
     {
-      q: 'Do you clean exterior window screens and sills?',
-      a: 'Yes! Along with the glass panes, we clean exterior screens and wipe down outside frames and sills so dust and pollen are fully cleared.',
+      q: 'Do you clean the outside screens and sills too?',
+      a: 'Yes, every single time. We don’t just wipe the glass—we clear exterior screens and wipe down outside frames and sills so trapped pollen, cobwebs, and road dust don’t wash right back over your clean glass.',
     },
     {
-      q: 'How often should Charlotte homeowners clean their exterior windows?',
-      a: 'Due to Charlotte’s heavy spring pine pollen (March–May) and autumn foliage dust, most local homeowners schedule exterior cleanings twice a year to keep natural light entering their home unobstructed.',
+      q: 'How often should Charlotte homes get exterior window cleaning?',
+      a: 'With Charlotte’s heavy spring yellow pine pollen (March–May) and autumn tree dust, most local homeowners schedule an exterior wash twice a year to keep natural daylight streaming through their home unobstructed.',
     },
   ];
 
@@ -107,6 +110,48 @@ export default function App() {
     { name: 'Fort Mill & Tega Cay', zip: '29708' },
   ];
 
+  const standards = [
+    {
+      num: '.01',
+      title: 'Show up on time.',
+      desc: 'We value your day. If your appointment is set for 9:00 AM, our van rolls up by 8:50 AM. If Carolina traffic or weather ever causes a hiccup, you get a friendly text right away.',
+      highlight: '10 mins early is our standard'
+    },
+    {
+      num: '.02',
+      title: 'Do what we said we’d do.',
+      desc: 'No cutting corners, no skipped panes, and no half-cleaned frames. Every exterior pane, screen, and sill gets thorough, attentive washing with honest elbow grease.',
+      highlight: 'Panes, screens & sills included'
+    },
+    {
+      num: '.03',
+      title: 'Leave your yard untouched.',
+      desc: 'We treat your property with complete care. Gates latched so dogs stay safe, hoses rolled neatly, and garden beds respected. All we leave behind is spotless glass.',
+      highlight: 'Gates latched & grounds tidy'
+    }
+  ];
+
+  const reviews = [
+    {
+      quote: "With Charlotte's pine pollen every spring, our second-story windows were coated in a dull yellow haze. WindowShine came out while we were at work—gates were latched when we got home, and the glass was completely crystal clear. Couldn't have been easier!",
+      author: 'Sarah M.',
+      neighborhood: 'Myers Park, Charlotte',
+      rating: 5
+    },
+    {
+      quote: "Super communicative, on time, and friendly. Cleaned all 26 exterior windows and screens on our two-story in Ballantyne. You don't realize how much natural light you are missing until they finish. Night and day difference!",
+      author: 'Marcus & Elena T.',
+      neighborhood: 'Ballantyne, Charlotte',
+      rating: 5
+    },
+    {
+      quote: "Straightforward estimate, no sales games, and top-tier exterior cleaning. My Lake Norman views are crisp again. It’s rare to find folks who take this much pride in honest exterior work.",
+      author: 'Linda K.',
+      neighborhood: 'Lake Norman / Cornelius',
+      rating: 5
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-slate-50 text-navy-950 flex flex-col font-sans">
       {/* Top Banner */}
@@ -115,11 +160,11 @@ export default function App() {
           <div className="flex items-center gap-2">
             <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span className="font-medium text-slate-200">
-              Charlotte, NC & Mecklenburg County: Exterior Residential Window Cleaning
+              Charlotte, NC: Friendly, Honest Exterior Residential Window Cleaning
             </span>
           </div>
           <div className="flex items-center gap-4 text-slate-300">
-            <span className="hidden sm:inline-block text-slate-400">Exterior Only • No Need to Be Home</span>
+            <span className="hidden sm:inline-block text-slate-400">100% Exterior • No Need to Be Home</span>
             <span className="hidden sm:inline-block text-navy-700">|</span>
             <a
               href="tel:7048192045"
@@ -152,8 +197,14 @@ export default function App() {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold text-navy-800">
-            <a href="#how-it-works" className="hover:text-skycraft-600 transition-colors">
-              How It Works
+            <a href="#standards" className="hover:text-skycraft-600 transition-colors">
+              The Standards
+            </a>
+            <a href="#why-exterior" className="hover:text-skycraft-600 transition-colors">
+              Why Exterior-Only
+            </a>
+            <a href="#reviews" className="hover:text-skycraft-600 transition-colors">
+              Neighbor Reviews
             </a>
             <a href="#coverage" className="hover:text-skycraft-600 transition-colors">
               Service Areas
@@ -194,18 +245,32 @@ export default function App() {
         {mobileMenuOpen && (
           <div className="lg:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-3">
             <a
-              href="#how-it-works"
+              href="#standards"
               onClick={() => setMobileMenuOpen(false)}
               className="block py-2 text-base font-semibold text-navy-900 border-b border-slate-100"
             >
-              How It Works
+              The Standards
+            </a>
+            <a
+              href="#why-exterior"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-2 text-base font-semibold text-navy-900 border-b border-slate-100"
+            >
+              Why Exterior-Only
+            </a>
+            <a
+              href="#reviews"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-2 text-base font-semibold text-navy-900 border-b border-slate-100"
+            >
+              Neighbor Reviews
             </a>
             <a
               href="#coverage"
               onClick={() => setMobileMenuOpen(false)}
               className="block py-2 text-base font-semibold text-navy-900 border-b border-slate-100"
             >
-              Charlotte Coverage
+              Service Areas
             </a>
             <a
               href="#faq"
@@ -235,27 +300,34 @@ export default function App() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-skycraft-50/60 via-white to-slate-50 pt-10 sm:pt-16 pb-16 lg:pb-24 overflow-hidden">
+      <section className="relative bg-gradient-to-b from-skycraft-50/70 via-white to-slate-50 pt-10 sm:pt-16 pb-16 lg:pb-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             
-            {/* Left Column: Thesis & Value Prop */}
+            {/* Left Column: Lively Thesis & Direct Value */}
             <div className="lg:col-span-7 space-y-6">
-              {/* Service Badge Pill */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-skycraft-100/80 border border-skycraft-200 text-skycraft-800 text-xs sm:text-sm font-semibold">
-                <Sun className="w-4 h-4 text-skycraft-600" />
-                <span>Charlotte Residential Specialists • Exterior Window Cleaning</span>
+              
+              {/* Star Rating Badge (Inspiration from Pink's) */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs sm:text-sm font-semibold shadow-sm">
+                <div className="flex text-amberlight-500">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-amberlight-500" />
+                  ))}
+                </div>
+                <span className="text-navy-950 font-bold">5.0 Star Rated</span>
+                <span className="text-slate-300">•</span>
+                <span className="text-slate-600">Charlotte Neighbor Favorite</span>
               </div>
 
               {/* Headline */}
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-navy-950 font-display leading-[1.1]">
-                Crystal-clear windows. <br />
+                Window cleaning done the right way. <br />
                 <span className="text-skycraft-600">Pure Carolina light.</span>
               </h1>
 
-              {/* Subheading */}
+              {/* Subheading with Warm Tone */}
               <p className="text-lg sm:text-xl text-slate-700 leading-relaxed max-w-2xl font-normal">
-                Charlotte’s dedicated exterior residential window cleaning service. We wash exterior panes, exterior screens, and sills on homes of all sizes—leaving your home bright and clear without any indoor disruption.
+                Hello Charlotte! We bring back good, honest service to exterior window washing. Reliable local crews, crystal-clear glass, and zero indoor disruption—leaving your home flooded with natural sunshine.
               </p>
 
               {/* Action Buttons */}
@@ -287,24 +359,24 @@ export default function App() {
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5 font-bold text-navy-900 text-sm">
-                    <Layers className="w-4 h-4 text-skycraft-600 shrink-0" />
-                    Multi-Story
+                    <Clock className="w-4 h-4 text-skycraft-600 shrink-0" />
+                    On-Time Crew
                   </div>
-                  <p className="text-xs text-slate-500">1 to 3+ stories safely reached</p>
+                  <p className="text-xs text-slate-500">10 mins early is standard</p>
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5 font-bold text-navy-900 text-sm">
-                    <CheckCircle2 className="w-4 h-4 text-skycraft-600 shrink-0" />
-                    Sills & Frames
+                    <Layers className="w-4 h-4 text-skycraft-600 shrink-0" />
+                    Screens & Sills
                   </div>
-                  <p className="text-xs text-slate-500">Wiped clean on every home</p>
+                  <p className="text-xs text-slate-500">Wiped clean every visit</p>
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5 font-bold text-navy-900 text-sm">
                     <Home className="w-4 h-4 text-amberlight-600 shrink-0" />
                     Charlotte Local
                   </div>
-                  <p className="text-xs text-slate-500">Serving Mecklenburg & vicinity</p>
+                  <p className="text-xs text-slate-500">Serving Mecklenburg & lake</p>
                 </div>
               </div>
             </div>
@@ -346,8 +418,8 @@ export default function App() {
         </div>
       </section>
 
-      {/* Decorative Window Glass Feature */}
-      <section className="py-12 sm:py-16 bg-white border-y border-slate-200">
+      {/* Decorative Full-Size Window Glass Feature */}
+      <section className="py-10 sm:py-14 bg-white border-y border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-2xl overflow-hidden shadow-2xl border-4 border-white ring-1 ring-slate-200 bg-slate-900">
             <img
@@ -356,60 +428,181 @@ export default function App() {
               className="w-full h-[360px] sm:h-[500px] lg:h-[620px] object-cover object-center"
             />
           </div>
+          <p className="text-center text-xs sm:text-sm text-slate-500 mt-4">
+            The view from inside after professional exterior washing: crystal-clear glass that lets Carolina sunlight brighten your entire living space.
+          </p>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section id="how-it-works" className="py-16 sm:py-24 bg-slate-900 text-white">
+      {/* The WindowShine Standards (Direct Inspiration from Pink's .01, .02, .03) */}
+      <section id="standards" className="py-16 sm:py-24 bg-slate-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-skycraft-950 border border-skycraft-800 text-skycraft-300 text-xs font-semibold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-skycraft-400" />
+              Our Everyday Work Ethics
+            </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold font-display">
-              Simple, hassle-free exterior cleaning.
+              The WindowShine Standards.
             </h2>
-            <p className="text-base sm:text-lg text-slate-300">
-              We focus exclusively on exterior residential window cleaning so you get maximum light without having to rearrange your schedule or invite anyone inside.
+            <p className="text-base sm:text-lg text-slate-300 leading-relaxed">
+              No corporate red tape. No sales pitches. Just hardworking, dependable local window cleaners who take genuine pride in treating your home like their own.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {standards.map((std) => (
+              <div
+                key={std.num}
+                className="bg-navy-850 p-8 rounded-2xl border border-navy-700/80 space-y-4 relative flex flex-col justify-between hover:border-skycraft-700 transition-colors"
+              >
+                <div className="space-y-4">
+                  <div className="text-3xl font-extrabold text-skycraft-400 font-mono">
+                    {std.num}
+                  </div>
+                  <h3 className="text-xl font-bold text-white font-display">
+                    {std.title}
+                  </h3>
+                  <p className="text-sm text-slate-300 leading-relaxed">
+                    {std.desc}
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-navy-750">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-amberlight-400">
+                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                    {std.highlight}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
+      {/* Why Charlotte Homeowners Love Exterior-Only */}
+      <section id="why-exterior" className="py-16 sm:py-24 bg-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 font-display">
+              Why Charlotte Loves Exterior-Only.
+            </h2>
+            <p className="text-base sm:text-lg text-slate-600">
+              We specialize 100% on outside glass, frames, and screens. Here is why homeowners prefer our hassle-free approach:
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             
-            <div className="bg-navy-850 p-6 sm:p-8 rounded-2xl border border-navy-700 space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-skycraft-900/60 text-skycraft-400 flex items-center justify-center font-bold text-lg font-display">
-                01
+            <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-skycraft-100 text-skycraft-700 flex items-center justify-center font-bold">
+                1
               </div>
-              <h3 className="text-xl font-bold text-white font-display">
-                Request Your Estimate
+              <h3 className="text-base font-bold text-navy-950">
+                Never Wait Around At Home
               </h3>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                Fill out our quick form or give us a call with your home address and approximate window count. We will send you a clear, straightforward estimate.
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Go to work, run errands, or take the kids to practice. You never have to block off hours of your day waiting for a service technician indoors.
               </p>
             </div>
 
-            <div className="bg-navy-850 p-6 sm:p-8 rounded-2xl border border-navy-700 space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-skycraft-900/60 text-skycraft-400 flex items-center justify-center font-bold text-lg font-display">
-                02
+            <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-skycraft-100 text-skycraft-700 flex items-center justify-center font-bold">
+                2
               </div>
-              <h3 className="text-xl font-bold text-white font-display">
-                100% Exterior Service
+              <h3 className="text-base font-bold text-navy-950">
+                Zero Household Disruption
               </h3>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                You do not need to be home. As long as exterior gates are unlocked, our team washes exterior glass panes, scrubs exterior screens, and details window sills.
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                No strangers tracking through bedrooms, no taking blinds down, no moving plants off window sills, and no stress for indoor pets.
               </p>
             </div>
 
-            <div className="bg-navy-850 p-6 sm:p-8 rounded-2xl border border-navy-700 space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-skycraft-900/60 text-skycraft-400 flex items-center justify-center font-bold text-lg font-display">
-                03
+            <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-skycraft-100 text-skycraft-700 flex items-center justify-center font-bold">
+                3
               </div>
-              <h3 className="text-xl font-bold text-white font-display">
-                Enjoy Bright Natural Light
+              <h3 className="text-base font-bold text-navy-950">
+                Tackles 95% of Grime
               </h3>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                Walk outside and look through spotless, clear windows. Enjoy clear views and Carolina sunshine throughout your home all season long.
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Charlotte’s yellow pine pollen, roadway pollution, spider webs, and baked-on rain spots live on the exterior glass. Washing the outside gives immediate crystal clarity.
               </p>
             </div>
 
+            <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-skycraft-100 text-skycraft-700 flex items-center justify-center font-bold">
+                4
+              </div>
+              <h3 className="text-base font-bold text-navy-950">
+                Effortless Seasonal Care
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Most Charlotte homeowners book an exterior wash each spring and fall. A fast, easy refresh that keeps your home shining year-round.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      {/* Neighbor Reviews (Inspiration from Pink's Customer Quotes) */}
+      <section id="reviews" className="py-16 sm:py-24 bg-gradient-to-b from-slate-50 to-white border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="max-w-3xl mx-auto text-center space-y-4 mb-16">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amberlight-100 border border-amberlight-300 text-amberlight-800 text-xs font-semibold uppercase tracking-wider">
+              <Heart className="w-3.5 h-3.5 text-amberlight-600 fill-amberlight-600" />
+              Real Charlotte Feedback
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 font-display">
+              What Your Neighbors Are Saying.
+            </h2>
+            <p className="text-base sm:text-lg text-slate-600">
+              Honest work leads to happy neighbors. Here’s what local homeowners have to say about WindowShine:
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {reviews.map((r, idx) => (
+              <div
+                key={idx}
+                className="bg-white p-7 sm:p-8 rounded-2xl border border-slate-200 shadow-clean flex flex-col justify-between space-y-6 hover:shadow-clean-hover transition-all"
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex text-amberlight-500">
+                      {[...Array(r.rating)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-amberlight-500" />
+                      ))}
+                    </div>
+                    <Quote className="w-6 h-6 text-slate-300" />
+                  </div>
+                  <p className="text-sm sm:text-base text-slate-700 leading-relaxed italic">
+                    "{r.quote}"
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-slate-100">
+                  <div className="font-bold text-navy-950 text-sm">{r.author}</div>
+                  <div className="text-xs text-skycraft-700 font-medium flex items-center gap-1 mt-0.5">
+                    <MapPin className="w-3 h-3 text-skycraft-500" />
+                    {r.neighborhood}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center">
+            <a
+              href="#quote-form"
+              className="inline-flex items-center gap-2 text-sm font-bold text-skycraft-700 hover:text-skycraft-800 underline"
+            >
+              Ready to see the difference on your own home? Get a quick exterior estimate &rarr;
+            </a>
           </div>
 
         </div>
@@ -420,11 +613,15 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="max-w-3xl mx-auto text-center space-y-4 mb-12">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-skycraft-100 border border-skycraft-200 text-skycraft-800 text-xs font-semibold uppercase tracking-wider">
+              <Calendar className="w-3.5 h-3.5 text-skycraft-600" />
+              Quick & Easy Scheduling
+            </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 font-display">
               Request Your Free Residential Estimate.
             </h2>
             <p className="text-base sm:text-lg text-slate-600">
-              Tell us a few details about your home below. We will provide a fast, straightforward estimate and confirm your preferred appointment time.
+              Tell us a few quick details below. We’ll follow up with a clear, straightforward estimate and confirm your preferred appointment date.
             </p>
           </div>
 
@@ -589,13 +786,13 @@ export default function App() {
           <div className="max-w-3xl mx-auto text-center space-y-3 mb-12">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold text-skycraft-800 uppercase tracking-wider">
               <MapPin className="w-4 h-4 text-skycraft-600" />
-              Local Mecklenburg Coverage
+              Local Mecklenburg & Lake Coverage
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-navy-950 font-display">
-              Serving Charlotte & Surrounding Communities.
+              Proudly Serving Charlotte Communities.
             </h2>
             <p className="text-base text-slate-600">
-              Our residential service vans operate daily throughout the Queen City and adjacent lake and suburban communities.
+              Our residential service vans operate daily throughout the Queen City and adjacent lake and suburban neighborhoods.
             </p>
           </div>
 
@@ -681,7 +878,7 @@ export default function App() {
                 </div>
               </div>
               <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
-                Charlotte’s dedicated exterior residential window cleaning service. Exterior glass panes, exterior screens, and sill wipe-downs.
+                Charlotte’s dedicated exterior residential window cleaning service. Honest work, spotless glass, wiped sills, and clean exterior screens.
               </p>
             </div>
 
@@ -693,7 +890,7 @@ export default function App() {
                 <li>Exterior Window Glass Washing</li>
                 <li>Exterior Screen Cleaning</li>
                 <li>Window Sill & Frame Wiping</li>
-                <li>Multi-Story Home Access</li>
+                <li>Multi-Story Residential Access</li>
               </ul>
             </div>
 
