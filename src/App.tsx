@@ -57,12 +57,12 @@ export default function App() {
           method: 'POST',
           mode: 'no-cors',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'text/plain;charset=utf-8',
           },
           body: JSON.stringify(payload),
         });
       } catch (err) {
-        console.error('Error submitting lead:', err);
+        console.error('Error submitting lead to Google Sheet:', err);
       }
     } else {
       console.log('Lead ready for Google Sheet (webhook URL pending):', payload);
