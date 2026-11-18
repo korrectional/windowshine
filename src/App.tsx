@@ -40,24 +40,17 @@ export default function App() {
     }
   };
 
-  // Appointment & Estimate Form State
-  const [propertyType, setPropertyType] = useState<'single' | 'townhome' | 'estate'>('single');
-  const [approxWindows, setApproxWindows] = useState('16-25 windows (Standard 2-Story Home)');
-  const [selectedNeighborhood, setSelectedNeighborhood] = useState('South Charlotte / Ballantyne');
-  
-  // Contact inputs
+  // Appointment & Estimate Form State (Calendar, Full Name, Address, Zip Code)
+  const [preferredDate, setPreferredDate] = useState('');
   const [fullName, setFullName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
   const [streetAddress, setStreetAddress] = useState('');
-  const [timeframe, setTimeframe] = useState('As soon as possible');
-  const [notes, setNotes] = useState('');
+  const [zipCode, setZipCode] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [refId, setRefId] = useState('');
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName || !phone) return;
+    if (!fullName || !streetAddress || !preferredDate || !zipCode) return;
     const generatedId = 'WS-' + Math.floor(100000 + Math.random() * 900000);
     setRefId(generatedId);
     setSubmitted(true);
@@ -519,10 +512,10 @@ export default function App() {
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto bg-slate-50 border border-slate-200/90 rounded-2xl shadow-clean p-6 sm:p-10">
+          <div className="max-w-3xl mx-auto bg-slate-50 border border-slate-200/90 rounded-2xl shadow-clean p-6 sm:p-10">
             
             {submitted ? (
-              <div className="text-center py-12 space-y-6">
+              <div className="text-center py-10 space-y-6">
                 <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-md">
                   <CheckCircle2 className="w-9 h-9" />
                 </div>
@@ -531,22 +524,23 @@ export default function App() {
                     Thank You, {fullName}!
                   </h3>
                   <p className="text-slate-600 max-w-md mx-auto text-base">
-                    We received your exterior estimate request for <strong className="text-navy-900">{streetAddress || selectedNeighborhood}</strong>.
+                    We received your exterior estimate request for <strong className="text-navy-900">{streetAddress}, {zipCode}</strong> for <strong className="text-navy-900">{preferredDate}</strong>.
                   </p>
                   <div className="inline-block bg-white border border-slate-300 rounded-lg px-4 py-2 text-sm font-semibold text-slate-700 mt-2">
                     Confirmation Reference: <span className="text-skycraft-700 font-mono font-bold">{refId}</span>
                   </div>
                 </div>
                 <p className="text-sm text-slate-500 max-w-md mx-auto">
-                  A Charlotte residential team coordinator will review your house details and call/text you at <strong className="text-navy-900">{phone}</strong> shortly.
+                  A Charlotte residential team coordinator will review your property details and confirm your estimate.
                 </p>
                 <div className="pt-4">
                   <button
                     onClick={() => {
                       setSubmitted(false);
                       setFullName('');
-                      setPhone('');
+                      setPreferredDate('');
                       setStreetAddress('');
+                      setZipCode('');
                     }}
                     className="text-sm font-bold text-skycraft-700 hover:text-skycraft-800 underline cursor-pointer"
                   >
@@ -555,205 +549,70 @@ export default function App() {
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleFormSubmit} className="space-y-8">
-                
-                {/* Step 1: Property Type & Window Count */}
-                <div>
-                  <h3 className="text-base font-bold text-navy-900 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <Home className="w-4 h-4 text-skycraft-600" />
-                    1. Select Your Home Type
-                  </h3>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-                    <button
-                      type="button"
-                      onClick={() => setPropertyType('single')}
-                      className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
-                        propertyType === 'single'
-                          ? 'border-skycraft-600 bg-skycraft-50/70 text-navy-950 font-bold shadow-sm'
-                          : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                      }`}
-                    >
-                      <div className="font-bold text-sm">Single Family Home</div>
-                      <div className="text-xs text-slate-500 mt-0.5">1-2 stories, typical suburban</div>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setPropertyType('townhome')}
-                      className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
-                        propertyType === 'townhome'
-                          ? 'border-skycraft-600 bg-skycraft-50/70 text-navy-950 font-bold shadow-sm'
-                          : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                      }`}
-                    >
-                      <div className="font-bold text-sm">Townhouse</div>
-                      <div className="text-xs text-slate-500 mt-0.5">Front & back glass, 2-3 levels</div>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setPropertyType('estate')}
-                      className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
-                        propertyType === 'estate'
-                          ? 'border-skycraft-600 bg-skycraft-50/70 text-navy-950 font-bold shadow-sm'
-                          : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
-                      }`}
-                    >
-                      <div className="font-bold text-sm">Multi-Story Estate</div>
-                      <div className="text-xs text-slate-500 mt-0.5">3+ stories, custom glass</div>
-                    </button>
-                  </div>
-
-                  {/* Window Count Selection */}
-                  <div className="bg-white p-5 rounded-xl border border-slate-200">
-                    <label htmlFor="window-select" className="block text-sm font-bold text-navy-950 mb-1.5">
-                      Approximate Window Count or Home Size
+              <form onSubmit={handleFormSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {/* Calendar Input */}
+                  <div>
+                    <label htmlFor="calendar-date" className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                      <Calendar className="w-4 h-4 text-skycraft-600" />
+                      Preferred Date *
                     </label>
-                    <select
-                      id="window-select"
-                      value={approxWindows}
-                      onChange={(e) => setApproxWindows(e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600 bg-white text-navy-900 font-medium"
-                    >
-                      <option value="10-15 windows (Townhouse / Small Ranch)">10–15 windows (Townhouse / 1-Story Ranch)</option>
-                      <option value="16-25 windows (Standard 2-Story Home)">16–25 windows (Standard 2-Story Home)</option>
-                      <option value="26-35 windows (Large 2-Story / 3,000+ sq ft)">26–35 windows (Large 2-Story / 3,000+ sq ft)</option>
-                      <option value="36-50+ windows (Multi-Story Estate / Custom Glass)">36–50+ windows (Multi-Story Estate / Custom Glass)</option>
-                      <option value="Not sure / Count on-site">Not sure (We will count on-site)</option>
-                    </select>
-                    <p className="text-xs text-slate-500 mt-2">
-                      An average Charlotte residential home has approximately 20–28 exterior panes.
-                    </p>
+                    <input
+                      id="calendar-date"
+                      type="date"
+                      required
+                      value={preferredDate}
+                      onChange={(e) => setPreferredDate(e.target.value)}
+                      className="w-full px-4 py-3 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600 bg-white"
+                    />
                   </div>
 
-                  {/* Clear Commitment Banner */}
-                  <div className="mt-6 p-5 rounded-xl bg-navy-950 text-white flex flex-wrap items-center justify-between gap-4">
-                    <div>
-                      <div className="text-xs text-skycraft-300 uppercase font-semibold">Free Consultation</div>
-                      <div className="text-xl sm:text-2xl font-extrabold font-display">
-                        100% Free, Zero-Obligation Estimate
-                      </div>
-                      <div className="text-xs text-slate-400 mt-0.5">
-                        We confirm exact pricing upfront before any work starts. No surprises, no hidden fees.
-                      </div>
-                    </div>
-                    <div className="text-xs text-slate-300 bg-navy-850 px-3.5 py-2.5 rounded-lg border border-navy-700">
-                      <div className="flex items-center gap-1.5 text-white font-medium">
-                        <Check className="w-3.5 h-3.5 text-skycraft-400 shrink-0" />
-                        Exterior Only • No Need to Be Home
-                      </div>
-                    </div>
+                  {/* Full Name */}
+                  <div>
+                    <label htmlFor="full-name" className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Full Name *
+                    </label>
+                    <input
+                      id="full-name"
+                      type="text"
+                      required
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="e.g. David Miller"
+                      className="w-full px-4 py-3 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600 bg-white"
+                    />
                   </div>
-                </div>
 
-                {/* Step 2: Customer Contact & Location */}
-                <div>
-                  <h3 className="text-base font-bold text-navy-900 uppercase tracking-wider mb-4 flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-skycraft-600" />
-                    2. Your Contact & Location Details
-                  </h3>
+                  {/* Street Address */}
+                  <div>
+                    <label htmlFor="street-address" className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Address *
+                    </label>
+                    <input
+                      id="street-address"
+                      type="text"
+                      required
+                      value={streetAddress}
+                      onChange={(e) => setStreetAddress(e.target.value)}
+                      placeholder="e.g. 1420 Queens Rd West"
+                      className="w-full px-4 py-3 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600 bg-white"
+                    />
+                  </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        placeholder="e.g. David Miller"
-                        className="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Phone Number *
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="(704) 555-0192"
-                        className="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Email Address
-                      </label>
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="david@example.com"
-                        className="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Charlotte Area Neighborhood
-                      </label>
-                      <select
-                        value={selectedNeighborhood}
-                        onChange={(e) => setSelectedNeighborhood(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600 bg-white"
-                      >
-                        {neighborhoods.map((n) => (
-                          <option key={n.name} value={n.name}>
-                            {n.name} ({n.zip})
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Street Address
-                      </label>
-                      <input
-                        type="text"
-                        value={streetAddress}
-                        onChange={(e) => setStreetAddress(e.target.value)}
-                        placeholder="e.g. 1420 Queens Rd West, Charlotte, NC"
-                        className="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Preferred Timing
-                      </label>
-                      <select
-                        value={timeframe}
-                        onChange={(e) => setTimeframe(e.target.value)}
-                        className="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600 bg-white"
-                      >
-                        <option value="As soon as possible">As soon as possible (This week)</option>
-                        <option value="Next week">Next week</option>
-                        <option value="Within 2-3 weeks">Within 2-3 weeks</option>
-                        <option value="Weekend preference">Weekend only</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Special Notes (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
-                        placeholder="e.g. High foyer transom, detached garage windows"
-                        className="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600"
-                      />
-                    </div>
+                  {/* Zip Code */}
+                  <div>
+                    <label htmlFor="zip-code" className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Zip Code *
+                    </label>
+                    <input
+                      id="zip-code"
+                      type="text"
+                      required
+                      value={zipCode}
+                      onChange={(e) => setZipCode(e.target.value)}
+                      placeholder="e.g. 28207"
+                      className="w-full px-4 py-3 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600 bg-white"
+                    />
                   </div>
                 </div>
 
@@ -767,7 +626,7 @@ export default function App() {
                     <ArrowRight className="w-5 h-5" />
                   </button>
                   <p className="text-center text-xs text-slate-500 mt-3">
-                    🔒 We respect your privacy. No spam, no aggressive sales calls.
+                    Exterior service only • No need to be home
                   </p>
                 </div>
 
