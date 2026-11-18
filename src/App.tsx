@@ -14,26 +14,61 @@ import {
   Layers,
   HelpCircle,
   Menu,
-  X
+  X,
+  Loader2
 } from 'lucide-react';
+import { GOOGLE_SHEET_WEBHOOK_URL } from './config';
 
 export default function App() {
   // Mobile navigation drawer
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Appointment & Estimate Form State (Calendar, Full Name, Address, Zip Code)
+  // Appointment & Estimate Form State
   const [preferredDate, setPreferredDate] = useState('');
   const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
   const [streetAddress, setStreetAddress] = useState('');
   const [zipCode, setZipCode] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [refId, setRefId] = useState('');
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName || !streetAddress || !preferredDate || !zipCode) return;
+    if (!fullName || !phone || !streetAddress || !preferredDate || !zipCode) return;
+    
+    setIsSubmitting(true);
     const generatedId = 'WS-' + Math.floor(100000 + Math.random() * 900000);
     setRefId(generatedId);
+
+    const payload = {
+      refId: generatedId,
+      fullName,
+      phone,
+      address: streetAddress,
+      zipCode,
+      date: preferredDate,
+      timestamp: new Date().toISOString(),
+    };
+
+    if (GOOGLE_SHEET_WEBHOOK_URL) {
+      try {
+        await fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+      } catch (err) {
+        console.error('Error submitting lead:', err);
+      }
+    } else {
+      console.log('Lead ready for Google Sheet (webhook URL pending):', payload);
+    }
+
+    setIsSubmitting(false);
     setSubmitted(true);
   };
 
@@ -405,20 +440,21 @@ export default function App() {
                     Thank You, {fullName}!
                   </h3>
                   <p className="text-slate-600 max-w-md mx-auto text-base">
-                    We received your exterior estimate request for <strong className="text-navy-900">{streetAddress}, {zipCode}</strong> for <strong className="text-navy-900">{preferredDate}</strong>.
+                    We received your exterior estimate request for <strong className="text-navy-900">{streetAddress}, {zipCode}</strong> scheduled for <strong className="text-navy-900">{preferredDate}</strong>.
                   </p>
                   <div className="inline-block bg-white border border-slate-300 rounded-lg px-4 py-2 text-sm font-semibold text-slate-700 mt-2">
                     Confirmation Reference: <span className="text-skycraft-700 font-mono font-bold">{refId}</span>
                   </div>
                 </div>
                 <p className="text-sm text-slate-500 max-w-md mx-auto">
-                  A Charlotte residential team coordinator will review your property details and confirm your estimate.
+                  A Charlotte residential team coordinator will review your property details and contact you at <strong className="text-navy-900">{phone}</strong>.
                 </p>
                 <div className="pt-4">
                   <button
                     onClick={() => {
                       setSubmitted(false);
                       setFullName('');
+                      setPhone('');
                       setPreferredDate('');
                       setStreetAddress('');
                       setZipCode('');
@@ -464,18 +500,19 @@ export default function App() {
                     />
                   </div>
 
-                  {/* Street Address */}
+                  {/* Phone Number */}
                   <div>
-                    <label htmlFor="street-address" className="block text-xs font-bold text-slate-700 mb-1.5">
-                      Address *
+                    <label htmlFor="phone" className="block text-xs font-bold text-slate-700 mb-1.5 flex items-center gap-1.5">
+                      <Phone className="w-4 h-4 text-skycraft-600" />
+                      Phone Number *
                     </label>
                     <input
-                      id="street-address"
-                      type="text"
+                      id="phone"
+                      type="tel"
                       required
-                      value={streetAddress}
-                      onChange={(e) => setStreetAddress(e.target.value)}
-                      placeholder="e.g. 1420 Queens Rd West"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="e.g. (704) 555-0192"
                       className="w-full px-4 py-3 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600 bg-white"
                     />
                   </div>
@@ -495,16 +532,42 @@ export default function App() {
                       className="w-full px-4 py-3 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600 bg-white"
                     />
                   </div>
+
+                  {/* Street Address */}
+                  <div className="sm:col-span-2">
+                    <label htmlFor="street-address" className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Address *
+                    </label>
+                    <input
+                      id="street-address"
+                      type="text"
+                      required
+                      value={streetAddress}
+                      onChange={(e) => setStreetAddress(e.target.value)}
+                      placeholder="e.g. 1420 Queens Rd West, Charlotte, NC"
+                      className="w-full px-4 py-3 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600 bg-white"
+                    />
+                  </div>
                 </div>
 
                 {/* Submit button */}
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full bg-skycraft-600 hover:bg-skycraft-700 text-white font-extrabold text-base py-4 rounded-xl shadow-clean hover:shadow-water transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    disabled={isSubmitting}
+                    className="w-full bg-skycraft-600 hover:bg-skycraft-700 disabled:bg-skycraft-400 text-white font-extrabold text-base py-4 rounded-xl shadow-clean hover:shadow-water transition-all flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
                   >
-                    <span>Submit Free Estimate Request</span>
-                    <ArrowRight className="w-5 h-5" />
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Sending Request...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Submit Free Estimate Request</span>
+                        <ArrowRight className="w-5 h-5" />
+                      </>
+                    )}
                   </button>
                   <p className="text-center text-xs text-slate-500 mt-3">
                     Exterior service only • No need to be home
