@@ -22,9 +22,56 @@ import {
 } from 'lucide-react';
 import { GOOGLE_SHEET_WEBHOOK_URL } from './config';
 
+// Bot protection: Phone digits stored separately to prevent static HTML scrapers
+const PHONE_PARTS = {
+  area: '704',
+  prefix: '819',
+  suffix: '2045',
+};
+
+const getMaskedPhone = () => `(${PHONE_PARTS.area}) •••-••••`;
+const getFullPhone = () => `(${PHONE_PARTS.area}) ${PHONE_PARTS.prefix}-${PHONE_PARTS.suffix}`;
+const getTelHref = () => `tel:${PHONE_PARTS.area}${PHONE_PARTS.prefix}${PHONE_PARTS.suffix}`;
+
+// Bot screening logic
+const isHumanVisitor = (e?: React.SyntheticEvent): boolean => {
+  if (typeof window === 'undefined') return false;
+  // 1. Headless / automated driver detection
+  if (window.navigator.webdriver) return false;
+  // 2. Crawler user-agent signatures
+  const ua = window.navigator.userAgent.toLowerCase();
+  if (/bot|crawler|spider|headless|crawl|phantom|slurp|facebookexternalhit|bingbot|googlebot/i.test(ua)) {
+    return false;
+  }
+  // 3. Synthetic untrusted event detection (native browser user event required)
+  if (e && e.nativeEvent && 'isTrusted' in e.nativeEvent) {
+    if (e.nativeEvent.isTrusted === false) return false;
+  }
+  return true;
+};
+
 export default function App() {
   // Mobile navigation drawer
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Anti-bot phone reveal state
+  const [phoneRevealed, setPhoneRevealed] = useState(false);
+
+  const handlePhoneClick = (e: React.MouseEvent, shouldCallDirect = false) => {
+    if (!isHumanVisitor(e)) {
+      e.preventDefault();
+      console.warn('Bot screening: automated interaction blocked.');
+      return;
+    }
+    
+    if (!phoneRevealed) {
+      e.preventDefault();
+      setPhoneRevealed(true);
+      if (shouldCallDirect && typeof window !== 'undefined') {
+        window.location.href = getTelHref();
+      }
+    }
+  };
 
   // Appointment & Estimate Form State
   const [preferredDate, setPreferredDate] = useState('');
@@ -32,6 +79,7 @@ export default function App() {
   const [phone, setPhone] = useState('');
   const [streetAddress, setStreetAddress] = useState('');
   const [zipCode, setZipCode] = useState('');
+  const [honeypot, setHoneypot] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [refId, setRefId] = useState('');
@@ -39,6 +87,14 @@ export default function App() {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName || !phone || !streetAddress || !preferredDate || !zipCode) return;
+
+    // Bot screening: silently ignore bot submission filling hidden honeypot
+    if (honeypot) {
+      console.warn('Bot screening: spam submission discarded via honeypot.');
+      setIsSubmitting(false);
+      setSubmitted(true);
+      return;
+    }
     
     setIsSubmitting(true);
     const generatedId = 'WS-' + Math.floor(100000 + Math.random() * 900000);
@@ -166,13 +222,31 @@ export default function App() {
           <div className="flex items-center gap-4 text-slate-300">
             <span className="hidden sm:inline-block text-slate-400">100% Exterior • No Need to Be Home</span>
             <span className="hidden sm:inline-block text-navy-700">|</span>
-            <a
-              href="tel:7048192045"
-              className="inline-flex items-center gap-1.5 font-semibold text-white hover:text-skycraft-300 transition-colors"
-            >
-              <Phone className="w-3.5 h-3.5 text-amberlight-400" />
-              (704) 819-2045
-            </a>
+            
+            {/* Top Phone with Bot Screening */}
+            {!phoneRevealed ? (
+              <button
+                type="button"
+                onClick={(e) => handlePhoneClick(e)}
+                className="inline-flex items-center gap-1.5 font-semibold text-white hover:text-skycraft-300 transition-colors cursor-pointer group"
+                title="Click to reveal phone number (anti-spam screening)"
+              >
+                <Phone className="w-3.5 h-3.5 text-amberlight-400" />
+                <span>{getMaskedPhone()}</span>
+                <span className="text-[10px] bg-navy-800 text-skycraft-300 px-1.5 py-0.5 rounded border border-navy-700 group-hover:bg-navy-750 transition-colors">
+                  Show
+                </span>
+              </button>
+            ) : (
+              <a
+                href={getTelHref()}
+                className="inline-flex items-center gap-1.5 font-semibold text-white hover:text-skycraft-300 transition-colors"
+              >
+                <Phone className="w-3.5 h-3.5 text-amberlight-400" />
+                <span>{getFullPhone()}</span>
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" title="Human verified" />
+              </a>
+            )}
           </div>
         </div>
       </div>
@@ -216,13 +290,28 @@ export default function App() {
 
           {/* Action CTAs */}
           <div className="hidden sm:flex items-center gap-4">
-            <a
-              href="tel:7048192045"
-              className="text-sm font-bold text-navy-900 hover:text-skycraft-600 px-3 py-2 transition-colors flex items-center gap-1.5"
-            >
-              <Phone className="w-4 h-4 text-skycraft-600" />
-              (704) 819-2045
-            </a>
+            {!phoneRevealed ? (
+              <button
+                type="button"
+                onClick={(e) => handlePhoneClick(e)}
+                className="text-sm font-bold text-navy-900 hover:text-skycraft-600 px-3 py-2 transition-colors flex items-center gap-2 cursor-pointer group"
+                title="Click to reveal phone number"
+              >
+                <Phone className="w-4 h-4 text-skycraft-600" />
+                <span>{getMaskedPhone()}</span>
+                <span className="text-[11px] font-semibold bg-skycraft-100 text-skycraft-800 px-2 py-0.5 rounded-full group-hover:bg-skycraft-200 transition-colors">
+                  Show
+                </span>
+              </button>
+            ) : (
+              <a
+                href={getTelHref()}
+                className="text-sm font-bold text-navy-900 hover:text-skycraft-600 px-3 py-2 transition-colors flex items-center gap-1.5"
+              >
+                <Phone className="w-4 h-4 text-skycraft-600" />
+                <span>{getFullPhone()}</span>
+              </a>
+            )}
             <a
               href="#quote-form"
               className="bg-skycraft-600 hover:bg-skycraft-700 text-white font-bold text-sm px-5 py-2.5 rounded-lg shadow-clean transition-all hover:shadow-water hover:-translate-y-0.5 active:translate-y-0"
@@ -280,13 +369,24 @@ export default function App() {
               FAQ
             </a>
             <div className="pt-2 flex flex-col gap-2">
-              <a
-                href="tel:7048192045"
-                className="w-full text-center py-2.5 rounded-lg border border-slate-300 font-bold text-navy-950 flex items-center justify-center gap-2"
-              >
-                <Phone className="w-4 h-4 text-skycraft-600" />
-                Call (704) 819-2045
-              </a>
+              {!phoneRevealed ? (
+                <button
+                  type="button"
+                  onClick={(e) => handlePhoneClick(e, true)}
+                  className="w-full text-center py-2.5 rounded-lg border border-slate-300 font-bold text-navy-950 flex items-center justify-center gap-2 cursor-pointer bg-slate-50"
+                >
+                  <Phone className="w-4 h-4 text-skycraft-600" />
+                  <span>Tap to Call ({getMaskedPhone()})</span>
+                </button>
+              ) : (
+                <a
+                  href={getTelHref()}
+                  className="w-full text-center py-2.5 rounded-lg border border-slate-300 font-bold text-navy-950 flex items-center justify-center gap-2"
+                >
+                  <Phone className="w-4 h-4 text-skycraft-600" />
+                  Call {getFullPhone()}
+                </a>
+              )}
               <a
                 href="#quote-form"
                 onClick={() => setMobileMenuOpen(false)}
@@ -307,7 +407,7 @@ export default function App() {
             {/* Left Column: Lively Thesis & Direct Value */}
             <div className="lg:col-span-7 space-y-6">
               
-              {/* Star Rating Badge (Inspiration from Pink's) */}
+              {/* Star Rating Badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200 text-xs sm:text-sm font-semibold shadow-sm">
                 <div className="flex text-amberlight-500">
                   {[...Array(5)].map((_, i) => (
@@ -339,13 +439,30 @@ export default function App() {
                   <Calendar className="w-5 h-5 text-skycraft-400" />
                   Request Free Estimate
                 </a>
-                <a
-                  href="tel:7048192045"
-                  className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-navy-950 border border-slate-300 font-bold text-base px-6 py-4 rounded-xl shadow-sm transition-all hover:border-slate-400 text-center"
-                >
-                  <Phone className="w-5 h-5 text-skycraft-600" />
-                  (704) 819-2045
-                </a>
+
+                {/* Hero Phone with Bot Screening */}
+                {!phoneRevealed ? (
+                  <button
+                    type="button"
+                    onClick={(e) => handlePhoneClick(e, true)}
+                    className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-navy-950 border border-slate-300 font-bold text-base px-6 py-4 rounded-xl shadow-sm transition-all hover:border-slate-400 text-center cursor-pointer group"
+                    title="Click to reveal phone number (anti-bot protection)"
+                  >
+                    <Phone className="w-5 h-5 text-skycraft-600" />
+                    <span>{getMaskedPhone()}</span>
+                    <span className="text-xs font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md group-hover:bg-skycraft-100 group-hover:text-skycraft-800 transition-colors">
+                      Click to Show
+                    </span>
+                  </button>
+                ) : (
+                  <a
+                    href={getTelHref()}
+                    className="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-navy-950 border border-slate-300 font-bold text-base px-6 py-4 rounded-xl shadow-sm transition-all hover:border-slate-400 text-center"
+                  >
+                    <Phone className="w-5 h-5 text-skycraft-600" />
+                    <span>{getFullPhone()}</span>
+                  </a>
+                )}
               </div>
 
               {/* Four Focused Highlights */}
@@ -434,7 +551,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* The WindowShine Standards (Direct Inspiration from Pink's .01, .02, .03) */}
+      {/* The WindowShine Standards */}
       <section id="standards" className="py-16 sm:py-24 bg-slate-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -549,7 +666,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* Neighbor Reviews (Inspiration from Pink's Customer Quotes) */}
+      {/* Neighbor Reviews */}
       <section id="reviews" className="py-16 sm:py-24 bg-gradient-to-b from-slate-50 to-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -655,6 +772,7 @@ export default function App() {
                       setPreferredDate('');
                       setStreetAddress('');
                       setZipCode('');
+                      setHoneypot('');
                     }}
                     className="text-sm font-bold text-skycraft-700 hover:text-skycraft-800 underline cursor-pointer"
                   >
@@ -664,6 +782,19 @@ export default function App() {
               </div>
             ) : (
               <form onSubmit={handleFormSubmit} className="space-y-6">
+                {/* Anti-spam honeypot (invisible to humans, traps automated form-filling bots) */}
+                <div className="hidden" aria-hidden="true" style={{ display: 'none' }}>
+                  <label htmlFor="website_url_hp">Website URL</label>
+                  <input
+                    id="website_url_hp"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                  />
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {/* Calendar Input */}
                   <div>
@@ -812,7 +943,22 @@ export default function App() {
           </div>
 
           <div className="mt-8 text-center text-xs text-slate-500">
-            Don’t see your exact Charlotte neighborhood? Call us at <a href="tel:7048192045" className="font-bold text-skycraft-700 underline">(704) 819-2045</a>—we likely service your street!
+            Don’t see your exact Charlotte neighborhood? Call us at{' '}
+            {!phoneRevealed ? (
+              <button
+                type="button"
+                onClick={(e) => handlePhoneClick(e)}
+                className="font-bold text-skycraft-700 underline cursor-pointer inline-flex items-center gap-1"
+                title="Click to show phone number"
+              >
+                {getMaskedPhone()} (show)
+              </button>
+            ) : (
+              <a href={getTelHref()} className="font-bold text-skycraft-700 underline">
+                {getFullPhone()}
+              </a>
+            )}
+            —we likely service your street!
           </div>
 
         </div>
@@ -901,7 +1047,23 @@ export default function App() {
               <div className="space-y-3 text-sm text-slate-400">
                 <div className="flex items-center gap-2 text-white font-semibold">
                   <Phone className="w-4 h-4 text-skycraft-400" />
-                  <a href="tel:7048192045" className="hover:text-skycraft-300">(704) 819-2045</a>
+                  {!phoneRevealed ? (
+                    <button
+                      type="button"
+                      onClick={(e) => handlePhoneClick(e)}
+                      className="hover:text-skycraft-300 cursor-pointer flex items-center gap-1.5 text-slate-300"
+                      title="Click to reveal phone number"
+                    >
+                      <span>{getMaskedPhone()}</span>
+                      <span className="text-[10px] bg-navy-850 px-1.5 py-0.5 rounded text-skycraft-400 border border-navy-700">
+                        Show
+                      </span>
+                    </button>
+                  ) : (
+                    <a href={getTelHref()} className="hover:text-skycraft-300">
+                      {getFullPhone()}
+                    </a>
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-slate-500" />
@@ -939,13 +1101,24 @@ export default function App() {
 
       {/* Sticky Mobile Call & Quote Bar */}
       <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 flex gap-3 shadow-2xl">
-        <a
-          href="tel:7048192045"
-          className="flex-1 py-3 bg-slate-100 text-navy-950 font-bold text-sm rounded-xl flex items-center justify-center gap-2 border border-slate-300"
-        >
-          <Phone className="w-4 h-4 text-skycraft-600" />
-          Call (704)
-        </a>
+        {!phoneRevealed ? (
+          <button
+            type="button"
+            onClick={(e) => handlePhoneClick(e, true)}
+            className="flex-1 py-3 bg-slate-100 text-navy-950 font-bold text-sm rounded-xl flex items-center justify-center gap-2 border border-slate-300 cursor-pointer"
+          >
+            <Phone className="w-4 h-4 text-skycraft-600" />
+            <span>Call (Tap)</span>
+          </button>
+        ) : (
+          <a
+            href={getTelHref()}
+            className="flex-1 py-3 bg-slate-100 text-navy-950 font-bold text-sm rounded-xl flex items-center justify-center gap-2 border border-slate-300"
+          >
+            <Phone className="w-4 h-4 text-skycraft-600" />
+            <span>Call (704)</span>
+          </a>
+        )}
         <a
           href="#quote-form"
           className="flex-1 py-3 bg-skycraft-600 text-white font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-md"
