@@ -47,7 +47,7 @@ export default function App() {
   // Appointment & Estimate Form State
   const [propertyType, setPropertyType] = useState<'single' | 'townhome' | 'estate'>('single');
   const [serviceScope, setServiceScope] = useState<'ext_only' | 'both' | 'deluxe'>('both');
-  const [windowCount, setWindowCount] = useState(24);
+  const [approxWindows, setApproxWindows] = useState('20-30 windows (Standard 2-Story Home)');
   const [selectedNeighborhood, setSelectedNeighborhood] = useState('South Charlotte / Ballantyne');
   
   // Contact inputs
@@ -59,24 +59,6 @@ export default function App() {
   const [notes, setNotes] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [refId, setRefId] = useState('');
-
-  // Estimate calculation
-  const calculateEstimate = () => {
-    let baseRate = 8; // base per window for exterior
-    if (serviceScope === 'both') baseRate = 14;
-    if (serviceScope === 'deluxe') baseRate = 18; // includes deep screens & tracks
-    
-    let multiplier = 1.0;
-    if (propertyType === 'townhome') multiplier = 0.95;
-    if (propertyType === 'estate') multiplier = 1.15;
-
-    const base = Math.round(windowCount * baseRate * multiplier);
-    const low = Math.round(base * 0.9);
-    const high = Math.round(base * 1.1);
-    return { low, high };
-  };
-
-  const estimate = calculateEstimate();
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -807,7 +789,7 @@ export default function App() {
               Request Your Free Residential Estimate.
             </h2>
             <p className="text-base sm:text-lg text-slate-600">
-              Get an instant transparent estimate range below, then submit your appointment request. We will contact you within 2 hours to confirm details and lock in your preferred date.
+              Tell us a few details about your home below. We will provide a fast, transparent, zero-obligation estimate and confirm your preferred appointment time.
             </p>
           </div>
 
@@ -939,48 +921,48 @@ export default function App() {
                     </button>
                   </div>
 
-                  {/* Window Count Slider */}
-                  <div className="mt-8 bg-white p-5 rounded-xl border border-slate-200">
-                    <div className="flex justify-between items-center mb-2">
-                      <label htmlFor="window-slider" className="text-sm font-bold text-navy-950">
-                        Approximate Window Count: <span className="text-skycraft-700 text-base">{windowCount} windows</span>
-                      </label>
-                      <span className="text-xs text-slate-500">
-                        (Average Charlotte home has 20-30 panes)
-                      </span>
-                    </div>
-                    <input
-                      id="window-slider"
-                      type="range"
-                      min="10"
-                      max="60"
-                      step="2"
-                      value={windowCount}
-                      onChange={(e) => setWindowCount(Number(e.target.value))}
-                      className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer squeegee-slider-range"
-                    />
-                    <div className="flex justify-between text-[11px] text-slate-400 mt-1">
-                      <span>10 windows</span>
-                      <span>25 windows (standard)</span>
-                      <span>40 windows</span>
-                      <span>60+ windows</span>
-                    </div>
+                  {/* Home Size & Window Count Selection */}
+                  <div className="mt-6 bg-white p-5 rounded-xl border border-slate-200">
+                    <label htmlFor="window-select" className="block text-sm font-bold text-navy-950 mb-1.5">
+                      Approximate Window Count or Home Size
+                    </label>
+                    <select
+                      id="window-select"
+                      value={approxWindows}
+                      onChange={(e) => setApproxWindows(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:border-skycraft-600 focus:ring-1 focus:ring-skycraft-600 bg-white text-navy-900 font-medium"
+                    >
+                      <option value="10-15 windows (Townhouse / Small Ranch)">10–15 windows (Townhouse / 1-Story Ranch)</option>
+                      <option value="16-25 windows (Standard 2-Story Home)">16–25 windows (Standard 2-Story Home)</option>
+                      <option value="26-35 windows (Large 2-Story / 3,000+ sq ft)">26–35 windows (Large 2-Story / 3,000+ sq ft)</option>
+                      <option value="36-50+ windows (Multi-Story Estate / Custom Glass)">36–50+ windows (Multi-Story Estate / Custom Glass)</option>
+                      <option value="Not sure / Count on-site">Not sure (Technician will count on-site)</option>
+                    </select>
+                    <p className="text-xs text-slate-500 mt-2">
+                      An average Charlotte home has approximately 20–28 panes.
+                    </p>
                   </div>
 
-                  {/* Dynamic Estimate Price Banner */}
-                  <div className="mt-4 p-4 rounded-xl bg-navy-950 text-white flex flex-wrap items-center justify-between gap-4">
+                  {/* Trust & Guarantee Banner */}
+                  <div className="mt-6 p-5 rounded-xl bg-navy-950 text-white flex flex-wrap items-center justify-between gap-4">
                     <div>
-                      <div className="text-xs text-skycraft-300 uppercase font-semibold">Estimated Investment</div>
-                      <div className="text-2xl sm:text-3xl font-extrabold font-display">
-                        ${estimate.low} - ${estimate.high}
+                      <div className="text-xs text-skycraft-300 uppercase font-semibold">Free & Fast Consultation</div>
+                      <div className="text-xl sm:text-2xl font-extrabold font-display">
+                        100% Free, Zero-Obligation Estimate
                       </div>
-                      <div className="text-xs text-slate-400">
-                        Exact quote confirmed upon quick inspection. Zero hidden fees.
+                      <div className="text-xs text-slate-400 mt-0.5">
+                        We confirm exact pricing upfront before any work starts. Zero surprise fees.
                       </div>
                     </div>
-                    <div className="text-xs text-slate-300 bg-navy-850 px-3 py-2 rounded-lg border border-navy-700">
-                      ✓ Includes 48-Hr Rain Guarantee<br />
-                      ✓ $2M General Liability Protection
+                    <div className="text-xs text-slate-300 bg-navy-850 px-3.5 py-2.5 rounded-lg border border-navy-700 space-y-1">
+                      <div className="flex items-center gap-1.5 text-white font-medium">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                        48-Hour Rain Guarantee Included
+                      </div>
+                      <div className="flex items-center gap-1.5 text-white font-medium">
+                        <ShieldCheck className="w-3.5 h-3.5 text-skycraft-400 shrink-0" />
+                        $2M General Liability Insured
+                      </div>
                     </div>
                   </div>
                 </div>
