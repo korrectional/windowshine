@@ -458,10 +458,7 @@ export default function App() {
                 {/* Architectural Caption Strip */}
                 <div className="absolute bottom-3 left-3 right-3 bg-navy-950/90 backdrop-blur-md p-4 rounded-xl border border-white/10 text-white flex items-center justify-between">
                   <div>
-                    <div className="text-[11px] font-mono uppercase tracking-widest text-skycraft-400">
-                      Residential Exterior Specialist
-                    </div>
-                    <div className="text-sm font-bold text-white mt-0.5">
+                    <div className="text-sm font-bold text-white">
                       Charlotte, NC • Mecklenburg County
                     </div>
                   </div>
